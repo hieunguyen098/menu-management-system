@@ -2,18 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy only the necessary files for installing dependencies
+# Copy package.json files
 COPY packages/backend/package*.json ./
-COPY yarn.lock ./
 
 # Install dependencies
-RUN yarn install --frozen-lockfile
+RUN npm install
 
 # Copy backend source code
 COPY packages/backend/ ./
 
 # Build the application
-RUN yarn build
+RUN npm run build
 
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
