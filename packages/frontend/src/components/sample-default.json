@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "parent": 0,
+    "droppable": true,
+    "text": "System",
+    "data": {
+      "id": 1,
+      "name": "System",
+      "depth": 0
+    }
+  },
+  {
+    "id": 2,
+    "parent": 1,
+    "text": "System-2",
+    "data": {
+      "id": 2,
+      "name": "System-2",
+      "depth": 1
+    }
+  },
+  {
+    "id": 3,
+    "parent": 1,
+    "text": "File 1-2",
+    "data": {
+      "id": 3,
+      "name": "System-3",
+      "depth": 1
+    }
+  }
+]

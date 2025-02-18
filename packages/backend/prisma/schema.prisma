@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Menu {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(255)
+  slug        String?      @unique @db.VarChar(255) // For URL-friendly names
+  description String?     @db.Text
+  isActive    Boolean     @default(true)
+  items       MenuItem[]  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([isActive])
+  @@map("menus")
+}
+
+model MenuItem {
+  id          Int         @id @default(autoincrement())
+  name        String      @db.VarChar(255)
+  slug        String?      @db.VarChar(255)
+  menuId      Int
+  order       Int         @default(0)
+  level       Int         @default(0) // Track hierarchy depth
+  path        String      @default("/") // Store full path for efficient traversal
+  isActive    Boolean     @default(true)
+  
+  // Parent-child relationship
+  parentId    Int?
+  parent      MenuItem?   @relation("MenuHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    MenuItem[]  @relation("MenuHierarchy")
+  
+  // Menu relationship
+  menu        Menu        @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([menuId, slug])
+  @@index([menuId, parentId, isActive])
+  @@index([path])
+  @@map("menu_items")
+}
